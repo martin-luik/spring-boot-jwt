@@ -1,4 +1,0 @@
-
-Vsquid:S32525"3Use static access with "java.util.Date" for "from".(š€’Üúÿÿÿÿ8¦š»ŸØ-
-jsquid:S00112)"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ãÈÕØ-
-Â%squid:RedundantThrowsDeclarationCheck$"„Remove the declaration of thrown exception 'org.springframework.security.core.AuthenticationException' which is a runtime exception.(¸Ğ»’ùÿÿÿÿ8ÙÔŠŸØ-
