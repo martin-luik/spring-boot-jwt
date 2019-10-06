@@ -9,6 +9,7 @@ create table if not exists dev_db.user_account
 			primary key,
 	username varchar not null,
 	password varchar not null
+	role varchar not null
 );
 
 alter table dev_db.user_account owner to dev_db;
