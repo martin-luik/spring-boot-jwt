@@ -8,7 +8,7 @@ create table if not exists dev_db.user_account
 		constraint user_account_pk
 			primary key,
 	username varchar not null,
-	password varchar not null
+	password varchar not null,
 	role varchar not null
 );
 
