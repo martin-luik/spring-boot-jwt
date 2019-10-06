@@ -11,6 +11,6 @@ public class HomeController {
 
     @GetMapping("/")
     public ResponseEntity<StringResponse> home() {
-        return new ResponseEntity<>(new StringResponse("Back-end is up"), HttpStatus.OK);
+        return new ResponseEntity<>(new StringResponse("Back-End is up"), HttpStatus.OK);
     }
 }

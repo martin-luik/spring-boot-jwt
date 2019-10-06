@@ -20,3 +20,8 @@ spring:
   data:
     rest:
       base-path: /api
+---
+security:
+  jwt:
+    key: c2VjcmV0
+    expiration: 864000000

@@ -19,10 +19,14 @@ import static com.example.demo.security.JwtConstant.TOKEN_TYPE;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final CustomUserDetailService customUserDetailService;
+    private final String secretKey;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, CustomUserDetailService customUserDetailService) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+                                  CustomUserDetailService customUserDetailService,
+                                  String secretKey) {
         super(authenticationManager);
         this.customUserDetailService = customUserDetailService;
+        this.secretKey = secretKey;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(AUTHORIZATION_HEADER);
         if (token != null) {
             String username = Jwts.parser()
-                    .setSigningKey("Secret")
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(token.replace(TOKEN_TYPE, ""))
                     .getBody()
                     .getSubject();

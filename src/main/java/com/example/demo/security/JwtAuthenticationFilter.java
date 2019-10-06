@@ -25,9 +25,13 @@ import static com.example.demo.security.JwtConstant.TOKEN_TYPE;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
+    private String secretKey;
+    private String tokenExpiration;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, String secretKey, String tokenExpiration) {
         this.authenticationManager = authenticationManager;
+        this.secretKey = secretKey;
+        this.tokenExpiration = tokenExpiration;
     }
 
     @Override
@@ -35,7 +39,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
             UserAccount userAccount = new ObjectMapper().readValue(request.getInputStream(), UserAccount.class);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAccount.getUsername(), userAccount.getPassword()));
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                    userAccount.getUsername(),
+                    userAccount.getPassword()
+            );
+            return authenticationManager.authenticate(token);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -46,11 +54,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authentication) throws IOException {
-        ZonedDateTime expirationTokeTime = ZonedDateTime.now(ZoneOffset.UTC).plus(864_000_000L, ChronoUnit.MILLIS);
+        ZonedDateTime expirationTokeTime = ZonedDateTime
+                .now(ZoneOffset.UTC)
+                .plus(Long.parseLong(tokenExpiration), ChronoUnit.MILLIS);
+
         String token = Jwts.builder()
                 .setSubject(((User) authentication.getPrincipal()).getUsername())
                 .setExpiration(Date.from(expirationTokeTime.toInstant()))
-                .signWith(SignatureAlgorithm.HS256, "Secret")
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

@@ -24,7 +24,6 @@ public class AuthenticationController {
         userAccountDto.setPassword(bCryptPasswordEncoder.encode(userAccountDto.getPassword()));
         UserAccount userAccount = modelMapper.map(userAccountDto, UserAccount.class);
         userAccountRepository.save(userAccount);
-        userAccountDto = modelMapper.map(userAccount, UserAccountDto.class);
-        return new ResponseEntity<>(userAccountDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

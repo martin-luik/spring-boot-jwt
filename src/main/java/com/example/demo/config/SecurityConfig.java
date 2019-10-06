@@ -4,6 +4,7 @@ import com.example.demo.security.JwtAuthenticationFilter;
 import com.example.demo.security.JwtAuthorizationFilter;
 import com.example.demo.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Value("${security.jwt.key}")
+    private String secretKey;
+    @Value("${security.jwt.expiration}")
+    private String tokenExpiration;
+
     private final CustomUserDetailService customUserDetailService;
 
     @Autowired
@@ -39,8 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), customUserDetailService))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), secretKey, tokenExpiration))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), customUserDetailService, secretKey))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
