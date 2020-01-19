@@ -19,5 +19,5 @@ public class UserAccount {
     private Long id;
     private String username;
     private String password;
-    private String role;
+    private String role = "USER";
 }
